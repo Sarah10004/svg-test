@@ -1,60 +1,94 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>내 첫 번째 SVG</title>
-  </head>
-  <body>
-    <h1>안녕! 나는 SVG 도형이야!</h1>
-    
-    <!-- 여기가 SVG 도형이에요 -->
-    <svg width="100%" height="500">
-      <rect id="box" x="30" y="30" width="80" height="80" fill="skyblue" 
-      onmousedown="startDrag(evt)" />
-      <circle cx="180" cy="70" r="40" fill="pink" onmousedown="startDrag(evt)" />
-    </svg>
 
-    <script>
-      let selected = null;
-      let offset = { x: 0, y: 0 };
-    
-      function startDrag(evt) {
-  selected = evt.target;
+<head>
+  <title>내 첫 번째 SVG</title>
+</head>
 
-  if (selected.tagName === "rect") {
-    offset.x = evt.clientX - parseFloat(selected.getAttribute("x"));
-    offset.y = evt.clientY - parseFloat(selected.getAttribute("y"));
-  } else if (selected.tagName === "circle") {
-    offset.x = evt.clientX - parseFloat(selected.getAttribute("cx"));
-    offset.y = evt.clientY - parseFloat(selected.getAttribute("cy"));
-  }
+<body>
+  <h1>안녕! 나는 SVG 도형이야!</h1>
 
-  window.addEventListener("mousemove", drag);
-  window.addEventListener("mouseup", endDrag);
-}
+  <!-- 여기가 SVG 도형이에요 -->
+  <svg width="100%" height="500">
+    <rect id="box" x="30" y="30" width="80" height="80" fill="skyblue" onmousedown="startDrag(evt)" />
+    <circle cx="180" cy="70" r="40" fill="pink" onmousedown="startDrag(evt)" />
+  </svg>
 
-    
-      function drag(evt) {
-  if (selected) {
-    const newX = evt.clientX - offset.x;
-    const newY = evt.clientY - offset.y;
+  <script>
+    let selected = null;
+    let offset = { x: 0, y: 0 };
 
-    if (selected.tagName === "rect") {
-      selected.setAttribute("x", newX);
-      selected.setAttribute("y", newY);
-    } else if (selected.tagName === "circle") {
-      selected.setAttribute("cx", newX);
-      selected.setAttribute("cy", newY);
-    }
-  }
-}
+    function startDrag(evt) {
+      selected = evt.target;
 
-    
-      function endDrag() {
-        window.removeEventListener("mousemove", drag);
-        window.removeEventListener("mouseup", endDrag);
-        selected = null;
+      if (selected.tagName === "rect") {
+        offset.x = evt.clientX - parseFloat(selected.getAttribute("x"));
+        offset.y = evt.clientY - parseFloat(selected.getAttribute("y"));
+      } else if (selected.tagName === "circle") {
+        offset.x = evt.clientX - parseFloat(selected.getAttribute("cx"));
+        offset.y = evt.clientY - parseFloat(selected.getAttribute("cy"));
       }
-    </script>
-    
-  </body>
+
+      window.addEventListener("mousemove", drag);
+      window.addEventListener("mouseup", endDrag);
+    }
+
+
+    function drag(evt) {
+      if (selected) {
+        const newX = evt.clientX - offset.x;
+        const newY = evt.clientY - offset.y;
+
+        if (selected.tagName === "rect") {
+          selected.setAttribute("x", newX);
+          selected.setAttribute("y", newY);
+        } else if (selected.tagName === "circle") {
+          selected.setAttribute("cx", newX);
+          selected.setAttribute("cy", newY);
+        }
+      }
+    }
+
+
+    function endDrag() {
+      window.removeEventListener("mousemove", drag);
+      window.removeEventListener("mouseup", endDrag);
+      selected = null;
+    }
+
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "+") {
+        if (selected) {
+          if (selected.tagName === "rect") {
+            let w = parseFloat(selected.getAttribute("width"));
+            let h = parseFloat(selected.getAttribute("height"));
+            selected.setAttribute("width", w * 1.1);
+            selected.setAttribute("height", h * 1.1);
+          } else if (selected.tagName === "circle") {
+            let r = parseFloat(selected.getAttribute("r"));
+            selected.setAttribute("r", r * 1.1);
+          }
+        }
+      }
+    });
+
+
+    if (e.key === "-") {
+      if (selected) {
+        if (selected.tagName === "rect") {
+          let w = parseFloat(selected.getAttribute("width"));
+          let h = parseFloat(selected.getAttribute("height"));
+          selected.setAttribute("width", w * 0.9);  // 10% 축소
+          selected.setAttribute("height", h * 0.9);
+        } else if (selected.tagName === "circle") {
+          let r = parseFloat(selected.getAttribute("r"));
+          selected.setAttribute("r", r * 0.9);
+        }
+      }
+    }
+
+  </script>
+
+</body>
+
 </html>
