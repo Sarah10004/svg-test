@@ -17,6 +17,7 @@
   <script>
     let selected = null;
     let offset = { x: 0, y: 0 };
+    let startSize = null;
 
     function startDrag(evt) {
       selected = evt.target;
@@ -24,6 +25,14 @@
       if (selected.tagName === "rect") {
         offset.x = evt.clientX - parseFloat(selected.getAttribute("x"));
         offset.y = evt.clientY - parseFloat(selected.getAttribute("y"));
+
+        startSize = {
+          width: parseFloat(selected.getAttribute("width")),
+          height: parseFloat(selected.getAttribute("height")),
+          startX: evt.clientX,
+          startY: evt.clientY
+        };
+
       } else if (selected.tagName === "circle") {
         offset.x = evt.clientX - parseFloat(selected.getAttribute("cx"));
         offset.y = evt.clientY - parseFloat(selected.getAttribute("cy"));
@@ -38,6 +47,15 @@
       if (selected) {
         const newX = evt.clientX - offset.x;
         const newY = evt.clientY - offset.y;
+
+        if (startSize) {
+          const dx = evt.clientX - startSize.startX;
+          const dy = evt.clientY - startSize.startY;
+
+          selected.setAttribute("width", Math.max(10, startSize.width + dx));
+          selected.setAttribute("height", Math.max(10, startSize.height + dy));
+        }
+
 
         if (selected.tagName === "rect") {
           selected.setAttribute("x", newX);
